@@ -1,17 +1,23 @@
 package com.joma.imagechanger
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.squareup.picasso.Picasso
+
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var image: ImageView
     private lateinit var btnNext: Button
     private lateinit var btnPrev: Button
+    private lateinit var tvNoInternet: TextView
+
     private var index: Int = 0
     private val url1: String =
         "https://www.tesla.com/sites/default/files/modelsx-new/social/model-x-social.jpg"
@@ -36,6 +42,7 @@ class MainActivity : AppCompatActivity() {
         image = findViewById(R.id.img_main)
         btnNext = findViewById(R.id.btn_next)
         btnPrev = findViewById(R.id.btn_prev)
+        tvNoInternet = findViewById(R.id.tv_no_internet)
     }
 
     private fun initAction() {
@@ -45,7 +52,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadImage(index: Int) {
-        Picasso.get().load(mutableList[index]).into(image)
+        if (isOnline()) {
+            Picasso.get().load(mutableList[index]).resize(1000, 600).centerCrop().into(image)
+            tvNoInternet.visibility = View.GONE
+        }
+        else {
+            image.setImageDrawable(resources.getDrawable(R.drawable.ic_no_wifi))
+            tvNoInternet.visibility = View.VISIBLE
+        }
         when (index) {
             0 -> btnPrev.visibility = View.GONE
             mutableList.size - 1 -> btnNext.visibility = View.GONE
@@ -54,5 +68,12 @@ class MainActivity : AppCompatActivity() {
                 btnPrev.visibility = View.VISIBLE
             }
         }
+    }
+
+    private fun isOnline(): Boolean {
+        val connectivityManager =
+            getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = connectivityManager.activeNetworkInfo
+        return networkInfo != null && networkInfo.isConnected
     }
 }
