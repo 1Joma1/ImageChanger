@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         "https://www.teslarati.com/wp-content/uploads/2019/06/red-roadster-model-y-1-1024x567.jpg"
     private val url5: String =
         "https://cdn.cnn.com/cnnnext/dam/assets/191114132216-tesla-vehicles-1023-super-tease.jpg"
-    private val mutableList: List<String> = mutableListOf(url1, url2, url3, url4, url5)
+    private val urls: List<String> = mutableListOf(url1, url2, url3, url4, url5)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadImage(index: Int) {
         if (isOnline()) {
-            Picasso.get().load(mutableList[index]).resize(1000, 600).centerCrop().into(image)
+            Picasso.get().load(urls[index]).resize(1000, 600).centerCrop().into(image)
             tvNoInternet.visibility = View.GONE
         }
         else {
@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
         }
         when (index) {
             0 -> btnPrev.visibility = View.GONE
-            mutableList.size - 1 -> btnNext.visibility = View.GONE
+            urls.size - 1 -> btnNext.visibility = View.GONE
             else -> {
                 btnNext.visibility = View.VISIBLE
                 btnPrev.visibility = View.VISIBLE
